@@ -7,17 +7,18 @@ type SirenLink struct {
 
 type SirenAction struct {
 	Name   string       `json:"name"`
-	Title  string       `json:"title"`
-	Method string       `json:"method"`
 	Href   string       `json:"href"`
-	Type   string       `json:"type"`
-	Fields []SirenField `json:"fields"`
+	Title  string       `json:"title,omitempty"`
+	Method string       `json:"method,omitempty"`
+	Type   string       `json:"type,omitempty"`
+	Fields []SirenField `json:"fields,omitempty"`
 }
 
 type SirenField struct {
 	Name  string `json:"name"`
+	Title string `json:"title,omitempty"`
 	Type  string `json:"type"`
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 type SirenEntity struct {
@@ -30,6 +31,33 @@ type SirenEntity struct {
 
 	// Optional for root, required for embedded
 	SirenLink
+}
+
+func (e *SirenEntity) AddLink(href string, rel ...string) {
+	e.Links = append(e.Links, SirenLink{
+		Rel:  rel,
+		Href: href,
+	})
+}
+
+func (e *SirenEntity) AddAction(name string, title string, method string,
+	href string, ctype string, fields ...SirenField) {
+	e.Actions = append(e.Actions, SirenAction{
+		Name:   name,
+		Title:  title,
+		Method: method,
+		Href:   href,
+		Type:   ctype,
+		Fields: fields,
+	})
+}
+
+func MakeField(name string, vtype string, value string) SirenField {
+	return SirenField{
+		Name:  name,
+		Type:  vtype,
+		Value: value,
+	}
 }
 
 func NewSirenEntity() *SirenEntity {
