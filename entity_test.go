@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestJSON(t *testing.T) {
+func TestEntityJSON(t *testing.T) {
 	assert := assert.New(t)
 
 	siren := NewSirenEntity()
