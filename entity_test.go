@@ -10,7 +10,7 @@ import (
 func TestEntityJSON(t *testing.T) {
 	assert := assert.New(t)
 
-	siren := NewSirenEntity()
+	siren := NewSirenEntity[any]()
 	siren.Title = "Welcome"
 	str, err := json.Marshal(siren)
 	assert.Nil(err)

@@ -1,25 +1,25 @@
 package gosiren
 
-type SirenEntity struct {
-	Title      string                 `json:"title,omitempty"`
-	Class      []string               `json:"class,omitempty"`
-	Properties map[string]interface{} `json:"properties,omitempty"`
-	Entities   []SirenEmbed           `json:"entities,omitempty"`
-	Actions    []SirenAction          `json:"actions,omitempty"`
-	Links      []SirenLink            `json:"links,omitempty"`
+type SirenEntity[P any] struct {
+	Title      string            `json:"title,omitempty"`
+	Class      []string          `json:"class,omitempty"`
+	Properties P                 `json:"properties,omitempty"`
+	Entities   []SirenEmbed[any] `json:"entities,omitempty"`
+	Actions    []SirenAction     `json:"actions,omitempty"`
+	Links      []SirenLink       `json:"links,omitempty"`
 }
 
-func (e *SirenEntity) SetTitle(title string) Siren {
+func (e *SirenEntity[P]) SetTitle(title string) Siren[P] {
 	e.Title = title
 	return e
 }
 
-func (e *SirenEntity) SetClasses(classes []string) Siren {
+func (e *SirenEntity[P]) SetClasses(classes []string) Siren[P] {
 	e.Class = classes
 	return e
 }
 
-func (e *SirenEntity) AddClass(class string) Siren {
+func (e *SirenEntity[P]) AddClass(class string) Siren[P] {
 	if e.Class == nil {
 		e.Class = []string{}
 	}
@@ -27,25 +27,25 @@ func (e *SirenEntity) AddClass(class string) Siren {
 	return e
 }
 
-func (e *SirenEntity) SetLinks(links []SirenLink) Siren {
+func (e *SirenEntity[P]) SetLinks(links []SirenLink) Siren[P] {
 	e.Links = links
 	return e
 }
 
-func (e *SirenEntity) AddLink(rel []string, href string, l SirenLink) Siren {
+func (e *SirenEntity[P]) AddLink(rel []string, href string, l SirenLink) Siren[P] {
 	l.Rel = rel
 	l.Href = href
 	e.Links = append(e.Links, l)
 	return e
 }
 
-func (e *SirenEntity) SetActions(actions []SirenAction) Siren {
+func (e *SirenEntity[P]) SetActions(actions []SirenAction) Siren[P] {
 	e.Actions = actions
 	return e
 }
 
-func (e *SirenEntity) AddAction(name string, title string, method string,
-	href string, ctype string, fields ...SirenField) Siren {
+func (e *SirenEntity[P]) AddAction(name string, title string, method string,
+	href string, ctype string, fields ...SirenField) Siren[P] {
 	e.Actions = append(e.Actions, SirenAction{
 		Name:   name,
 		Title:  title,
@@ -57,26 +57,25 @@ func (e *SirenEntity) AddAction(name string, title string, method string,
 	return e
 }
 
-func (e *SirenEntity) SetEmbeds(embeds []SirenEmbed) Siren {
+func (e *SirenEntity[P]) SetEmbeds(embeds []SirenEmbed[any]) Siren[P] {
 	e.Entities = embeds
 	return e
 }
 
 // Rel is an argument because it is required
-func (e *SirenEntity) AddEmbed(rel []string, embed SirenEmbed) Siren {
+func (e *SirenEntity[P]) AddEmbed(rel []string, embed SirenEmbed[any]) Siren[P] {
 	embed.Rel = rel
 	e.Entities = append(e.Entities, embed)
 	return e
 }
 
-func NewSirenEntity() *SirenEntity {
-	return &SirenEntity{
-		Class:      []string{},
-		Properties: map[string]interface{}{},
-		Entities:   []SirenEmbed{},
-		Actions:    []SirenAction{},
-		Links:      []SirenLink{},
+func NewSirenEntity[P any]() *SirenEntity[P] {
+	return &SirenEntity[P]{
+		Class:    []string{},
+		Entities: []SirenEmbed[any]{},
+		Actions:  []SirenAction{},
+		Links:    []SirenLink{},
 	}
 }
 
-var _ Siren = (*SirenEntity)(nil)
+var _ Siren[any] = (*SirenEntity[any])(nil)

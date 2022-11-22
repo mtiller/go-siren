@@ -1,14 +1,14 @@
 package gosiren
 
-type Siren interface {
-	SetTitle(string) Siren
-	SetClasses([]string) Siren
-	AddClass(string) Siren
+type Siren[P any] interface {
+	SetTitle(string) Siren[P]
+	SetClasses([]string) Siren[P]
+	AddClass(string) Siren[P]
 	// SetProperties(map[string]interface{}) Siren
-	SetLinks([]SirenLink) Siren
-	AddLink([]string, string, SirenLink) Siren
-	SetActions([]SirenAction) Siren
-	AddAction(string, string, string, string, string, ...SirenField) Siren
-	SetEmbeds([]SirenEmbed) Siren
-	AddEmbed([]string, SirenEmbed) Siren
+	SetLinks([]SirenLink) Siren[P]
+	AddLink([]string, string, SirenLink) Siren[P]
+	SetActions([]SirenAction) Siren[P]
+	AddAction(string, string, string, string, string, ...SirenField) Siren[P]
+	SetEmbeds([]SirenEmbed[any]) Siren[P]
+	AddEmbed([]string, SirenEmbed[any]) Siren[P]
 }
