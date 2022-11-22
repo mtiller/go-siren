@@ -44,6 +44,11 @@ func (e *SirenEmbed[P]) AddClass(class string) Siren[P] {
 	return e
 }
 
+func (e *SirenEmbed[P]) SetProperties(props P) Siren[P] {
+	e.Properties = props
+	return e
+}
+
 func (e *SirenEmbed[P]) SetLinks(links []SirenLink) Siren[P] {
 	e.Links = links
 	return e
