@@ -1,9 +1,10 @@
 package gosiren
 
-// type Embeddable interface {
-// 	GetHref() string
-// 	SetHref(href string) Embeddable
-// 	GetRel() []string
-// 	AddRel(string) Embeddable
-// 	SetRel([]string) Embeddable
-// }
+type Embeddable interface {
+	GetTitle() string
+	GetClass() []string
+	GetProperties() interface{}
+	GetActions() []SirenAction
+	GetLinks() []SirenLink
+	GetEntities() []SirenEmbed[any]
+}

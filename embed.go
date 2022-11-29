@@ -10,7 +10,7 @@ type SirenEmbed[P any] struct {
 	// Otherwise, just like a normal SirenEntity
 	Title      string            `json:"title,omitempty"`
 	Class      []string          `json:"class,omitempty"`
-	Properties *P                `json:"properties,omitempty"`
+	Properties P                 `json:"properties,omitempty"`
 	Entities   []SirenEmbed[any] `json:"entities,omitempty"`
 	Actions    []SirenAction     `json:"actions,omitempty"`
 	Links      []SirenLink       `json:"links,omitempty"`
@@ -65,7 +65,7 @@ func (e *SirenEmbed[P]) AddClass(class string) *SirenEmbed[P] {
 	return e
 }
 
-func (e *SirenEmbed[P]) SetProperties(props *P) *SirenEmbed[P] {
+func (e *SirenEmbed[P]) SetProperties(props P) *SirenEmbed[P] {
 	e.Properties = props
 	return e
 }
@@ -101,7 +101,7 @@ func (e *SirenEmbed[P]) AddAction(name string, title string, method string,
 }
 
 // Rel is an argument because it is required
-func (e *SirenEmbed[P]) AddEmbed(href string, siren *SirenEntity[any], rel ...string) *SirenEmbed[P] {
+func (e *SirenEmbed[P]) AddEmbed(href string, siren *Siren[any], rel ...string) *SirenEmbed[P] {
 	embed := SirenEmbed[any]{
 		Rel:        rel,
 		Href:       href,

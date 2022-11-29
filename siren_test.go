@@ -15,7 +15,7 @@ type MyProperties struct {
 func TestEntityJSON(t *testing.T) {
 	assert := assert.New(t)
 
-	siren := NewSirenEntity[any]().SetTitle("Welcome")
+	siren := NewSiren().SetTitle("Welcome").SetProperties(nil)
 
 	str, err := json.Marshal(siren)
 	assert.Nil(err)
@@ -29,11 +29,18 @@ func TestEntityJSON(t *testing.T) {
 	assert.Nil(err)
 	assert.Equal(`{"title":"Welcome","links":[{"rel":["home"],"href":"https://example.com/home","title":"Home"}]}`, string(str))
 
-	mysiren := NewSirenEntity[MyProperties]()
+	mysiren := NewSirenP(&MyProperties{X: "hello", Y: 5})
 	mysiren.Title = "Uses MyProperties"
-	mysiren.SetProperties(&MyProperties{X: "hello", Y: 5})
 
 	str, err = json.Marshal(mysiren)
 	assert.Nil(err)
 	assert.Equal(`{"title":"Uses MyProperties","properties":{"x":"hello","y":5}}`, string(str))
 }
+
+// TODO:
+// func TestQuery(t *testing.T) {
+// 	assert := assert.New(t)
+
+// 	siren := NewSiren().SetTitle("Welcome")
+// 	siren.LinksWithClass("foo")
+// }
