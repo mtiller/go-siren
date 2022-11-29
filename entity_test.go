@@ -15,8 +15,8 @@ type MyProperties struct {
 func TestEntityJSON(t *testing.T) {
 	assert := assert.New(t)
 
-	siren := NewSirenEntity[any]()
-	siren.Title = "Welcome"
+	siren := NewSirenEntity[any]().SetTitle("Welcome")
+
 	str, err := json.Marshal(siren)
 	assert.Nil(err)
 	assert.Equal(`{"title":"Welcome"}`, string(str))
