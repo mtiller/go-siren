@@ -21,9 +21,9 @@ func TestEntityJSON(t *testing.T) {
 	assert.Nil(err)
 	assert.Equal(`{"title":"Welcome"}`, string(str))
 
-	siren.AddLink([]string{"home"}, "https://example.com/home", SirenLink{
+	siren.AddLink("https://example.com/home", SirenLink{
 		Title: "Home",
-	})
+	}, "home")
 
 	str, err = json.Marshal(siren)
 	assert.Nil(err)
@@ -37,10 +37,30 @@ func TestEntityJSON(t *testing.T) {
 	assert.Equal(`{"title":"Uses MyProperties","properties":{"x":"hello","y":5}}`, string(str))
 }
 
-// TODO:
-// func TestQuery(t *testing.T) {
-// 	assert := assert.New(t)
+func TestQuery(t *testing.T) {
+	assert := assert.New(t)
 
-// 	siren := NewSiren().SetTitle("Welcome")
-// 	siren.LinksWithClass("foo")
-// }
+	siren := NewSiren().SetTitle("Welcome")
+	assert.Equal(0, len(siren.Links))
+
+	foos := siren.LinksWithClass("foo")
+	assert.Equal(0, len(foos))
+
+	siren.AddLink("#/child/foo", SirenLink{Class: []string{"foo"}}, "item")
+	siren.AddLink("#/child/bar", SirenLink{Class: []string{"bar"}}, "item", "collection")
+
+	foos = siren.LinksWithClass("foo")
+	assert.Equal(1, len(foos))
+
+	siren.AddEmbed("#/child/foo", NewSiren().AddClass("foo"), "item")
+	siren.AddEmbed("#/child/bar", NewSiren().AddClass("bar"), "item", "collection")
+
+	fooes := siren.EntitiesWithClass("foo")
+	assert.Equal(1, len(fooes))
+
+	assert.Equal(2, len(siren.LinksWithRel("item")))
+	assert.Equal(1, len(siren.LinksWithRel("collection")))
+
+	assert.Equal(2, len(siren.EntitiesWithRel("item")))
+	assert.Equal(1, len(siren.EntitiesWithRel("collection")))
+}

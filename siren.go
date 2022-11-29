@@ -57,8 +57,8 @@ func (e *Siren[P]) SetLinks(links []SirenLink) *Siren[P] {
 	return e
 }
 
-func (e *Siren[P]) AddLink(rel []string, href string, l SirenLink) *Siren[P] {
-	l.Rel = rel
+func (e *Siren[P]) AddLink(href string, l SirenLink, r1 string, rel ...string) *Siren[P] {
+	l.Rel = append([]string{r1}, rel...)
 	l.Href = href
 	e.Links = append(e.Links, l)
 	return e
@@ -90,10 +90,9 @@ func (e *Siren[P]) GetEntities() []SirenEmbed[any] {
 	return e.Entities
 }
 
-// Rel is an argument because it is required
-func (e *Siren[P]) AddEmbed(href string, siren Embeddable, rel ...string) *Siren[P] {
+func (e *Siren[P]) AddEmbed(href string, siren Embeddable, r1 string, rel ...string) *Siren[P] {
 	embed := SirenEmbed[any]{
-		Rel:        rel,
+		Rel:        append([]string{r1}, rel...),
 		Href:       href,
 		Title:      siren.GetTitle(),
 		Class:      siren.GetClass(),
@@ -105,6 +104,70 @@ func (e *Siren[P]) AddEmbed(href string, siren Embeddable, rel ...string) *Siren
 
 	e.Entities = append(e.Entities, embed)
 	return e
+}
+
+func (e *Siren[P]) LinksWithClass(c string) []SirenLink {
+	if e.Links == nil {
+		return []SirenLink{}
+	}
+	return Filter(e.Links, func(link SirenLink) bool {
+		if link.Class != nil {
+			for _, cl := range link.Class {
+				if cl == c {
+					return true
+				}
+			}
+		}
+		return false
+	})
+}
+
+func (e *Siren[P]) LinksWithRel(r string) []SirenLink {
+	if e.Links == nil {
+		return []SirenLink{}
+	}
+	return Filter(e.Links, func(link SirenLink) bool {
+		if link.Rel != nil {
+			for _, rl := range link.Rel {
+				if rl == r {
+					return true
+				}
+			}
+		}
+		return false
+	})
+}
+
+func (e *Siren[P]) EntitiesWithClass(c string) []SirenEmbed[any] {
+	if e.Entities == nil {
+		return []SirenEmbed[any]{}
+	}
+	return Filter(e.Entities, func(entity SirenEmbed[any]) bool {
+		if entity.Class != nil {
+			for _, cl := range entity.Class {
+				if cl == c {
+					return true
+				}
+			}
+		}
+		return false
+	})
+}
+
+func (e *Siren[P]) EntitiesWithRel(r string) []SirenEmbed[any] {
+	if e.Entities == nil {
+		return []SirenEmbed[any]{}
+	}
+	return Filter(e.Entities, func(entity SirenEmbed[any]) bool {
+		if entity.Rel != nil {
+			for _, rl := range entity.Rel {
+				if rl == r {
+					return true
+				}
+			}
+		}
+		return false
+	})
 }
 
 func NewSiren() *Siren[any] {
