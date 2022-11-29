@@ -16,11 +16,12 @@ func TestEmbedJSON(t *testing.T) {
 	assert.Nil(err)
 	assert.Equal(`{"rel":["next"],"title":"Welcome"}`, string(str))
 
-	siren.AddLink([]string{"home"}, "https://example.com/home", SirenLink{
-		Title: "Home",
-	})
+	child := NewSirenEmbed[struct{}]([]string{"next"})
+	child.SetTitle("Home")
+
+	siren.AddEmbed([]string{"home"}, child)
 
 	str, err = json.Marshal(siren)
 	assert.Nil(err)
-	assert.Equal(`{"rel":["next"],"title":"Welcome","links":[{"rel":["home"],"href":"https://example.com/home","title":"Home"}]}`, string(str))
+	assert.Equal(`{"rel":["next"],"title":"Welcome","entities":[{"rel":["home"],"title":"Home"}]}`, string(str))
 }
