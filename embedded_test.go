@@ -22,7 +22,7 @@ func TestEmbedJSON(t *testing.T) {
 
 	child := NewSirenP(Prop1{X: 5}).SetTitle("I'm a child")
 
-	siren.AddEmbed("#/child", child, "home")
+	siren.AddEntity("#/child", child, "home")
 	siren.Entities[0].AddClass("foo")
 
 	str, err = json.Marshal(siren)
@@ -41,9 +41,9 @@ func TestContruction(t *testing.T) {
 
 	siren := NewSiren().
 		SetTitle("Welcome").
-		AddEmbed("#/child", NewSiren().
+		AddEntity("#/child", NewSiren().
 			SetTitle("Child").
-			AddEmbed("#/grandchild", NewSiren().
+			AddEntity("#/grandchild", NewSiren().
 				SetTitle("Grandchild"), "item"),
 			"item")
 	str, err := json.Marshal(siren)

@@ -4,13 +4,15 @@ import (
 	"encoding/json"
 )
 
+const MimeType = "application/vnd.siren+json"
+
 type Siren[P any] struct {
-	Title      string            `json:"title,omitempty"`
-	Class      []string          `json:"class,omitempty"`
-	Properties P                 `json:"properties,omitempty"`
-	Actions    []SirenAction     `json:"actions,omitempty"`
-	Links      []SirenLink       `json:"links,omitempty"`
-	Entities   []SirenEmbed[any] `json:"entities,omitempty"`
+	Title      string                `json:"title,omitempty"`
+	Class      []string              `json:"class,omitempty"`
+	Properties P                     `json:"properties,omitempty"`
+	Actions    []SirenAction         `json:"actions,omitempty"`
+	Links      []SirenLink           `json:"links,omitempty"`
+	Entities   []EmbeddedEntity[any] `json:"entities,omitempty"`
 }
 
 func (e *Siren[P]) GetTitle() string {
@@ -86,12 +88,12 @@ func (e *Siren[P]) AddAction(name string, title string, method string,
 	return e
 }
 
-func (e *Siren[P]) GetEntities() []SirenEmbed[any] {
+func (e *Siren[P]) GetEntities() []EmbeddedEntity[any] {
 	return e.Entities
 }
 
-func (e *Siren[P]) AddEmbed(href string, siren Embeddable, r1 string, rel ...string) *Siren[P] {
-	embed := SirenEmbed[any]{
+func (e *Siren[P]) AddEntity(href string, siren Embeddable, r1 string, rel ...string) *Siren[P] {
+	embed := EmbeddedEntity[any]{
 		Rel:        append([]string{r1}, rel...),
 		Href:       href,
 		Title:      siren.GetTitle(),
@@ -138,11 +140,11 @@ func (e *Siren[P]) LinksWithRel(r string) []SirenLink {
 	})
 }
 
-func (e *Siren[P]) EntitiesWithClass(c string) []SirenEmbed[any] {
+func (e *Siren[P]) EntitiesWithClass(c string) []EmbeddedEntity[any] {
 	if e.Entities == nil {
-		return []SirenEmbed[any]{}
+		return []EmbeddedEntity[any]{}
 	}
-	return Filter(e.Entities, func(entity SirenEmbed[any]) bool {
+	return Filter(e.Entities, func(entity EmbeddedEntity[any]) bool {
 		if entity.Class != nil {
 			for _, cl := range entity.Class {
 				if cl == c {
@@ -154,11 +156,11 @@ func (e *Siren[P]) EntitiesWithClass(c string) []SirenEmbed[any] {
 	})
 }
 
-func (e *Siren[P]) EntitiesWithRel(r string) []SirenEmbed[any] {
+func (e *Siren[P]) EntitiesWithRel(r string) []EmbeddedEntity[any] {
 	if e.Entities == nil {
-		return []SirenEmbed[any]{}
+		return []EmbeddedEntity[any]{}
 	}
-	return Filter(e.Entities, func(entity SirenEmbed[any]) bool {
+	return Filter(e.Entities, func(entity EmbeddedEntity[any]) bool {
 		if entity.Rel != nil {
 			for _, rl := range entity.Rel {
 				if rl == r {
@@ -173,7 +175,7 @@ func (e *Siren[P]) EntitiesWithRel(r string) []SirenEmbed[any] {
 func NewSiren() *Siren[any] {
 	return &Siren[any]{
 		Class:    []string{},
-		Entities: []SirenEmbed[any]{},
+		Entities: []EmbeddedEntity[any]{},
 		Actions:  []SirenAction{},
 		Links:    []SirenLink{},
 	}
@@ -183,7 +185,7 @@ func NewSirenP[P any](p P) *Siren[P] {
 	return &Siren[P]{
 		Class:      []string{},
 		Properties: p,
-		Entities:   []SirenEmbed[any]{},
+		Entities:   []EmbeddedEntity[any]{},
 		Actions:    []SirenAction{},
 		Links:      []SirenLink{},
 	}

@@ -6,5 +6,5 @@ type Embeddable interface {
 	GetProperties() interface{}
 	GetActions() []SirenAction
 	GetLinks() []SirenLink
-	GetEntities() []SirenEmbed[any]
+	GetEntities() []EmbeddedEntity[any]
 }

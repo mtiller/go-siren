@@ -52,8 +52,8 @@ func TestQuery(t *testing.T) {
 	foos = siren.LinksWithClass("foo")
 	assert.Equal(1, len(foos))
 
-	siren.AddEmbed("#/child/foo", NewSiren().AddClass("foo"), "item")
-	siren.AddEmbed("#/child/bar", NewSiren().AddClass("bar"), "item", "collection")
+	siren.AddEntity("#/child/foo", NewSiren().AddClass("foo"), "item")
+	siren.AddEntity("#/child/bar", NewSiren().AddClass("bar"), "item", "collection")
 
 	fooes := siren.EntitiesWithClass("foo")
 	assert.Equal(1, len(fooes))
