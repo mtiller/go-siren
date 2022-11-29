@@ -31,7 +31,7 @@ func TestEntityJSON(t *testing.T) {
 
 	mysiren := NewSirenEntity[MyProperties]()
 	mysiren.Title = "Uses MyProperties"
-	mysiren.SetProperties(MyProperties{X: "hello", Y: 5})
+	mysiren.SetProperties(&MyProperties{X: "hello", Y: 5})
 
 	str, err = json.Marshal(mysiren)
 	assert.Nil(err)

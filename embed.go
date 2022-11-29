@@ -8,16 +8,37 @@ type SirenEmbed[P any] struct {
 	Type string `json:"type,omitempty"`
 
 	// Otherwise, just like a normal SirenEntity
-	Title      string            `json:"title,omitempty"`
-	Class      []string          `json:"class,omitempty"`
-	Properties P                 `json:"properties,omitempty"`
-	Entities   []SirenEmbed[any] `json:"entities,omitempty"`
-	Actions    []SirenAction     `json:"actions,omitempty"`
-	Links      []SirenLink       `json:"links,omitempty"`
+	Title      string        `json:"title,omitempty"`
+	Class      []string      `json:"class,omitempty"`
+	Properties *P            `json:"properties,omitempty"`
+	Entities   []Embeddable  `json:"entities,omitempty"`
+	Actions    []SirenAction `json:"actions,omitempty"`
+	Links      []SirenLink   `json:"links,omitempty"`
 }
 
-func (e *SirenEmbed[P]) SetHref(href string) *SirenEmbed[P] {
+func (e *SirenEmbed[P]) GetHref() string {
+	return e.Href
+}
+
+func (e *SirenEmbed[P]) SetHref(href string) Embeddable {
 	e.Href = href
+	return e
+}
+
+func (e *SirenEmbed[P]) GetRel() []string {
+	return e.Rel
+}
+
+func (e *SirenEmbed[P]) AddRel(rel string) Embeddable {
+	if e.Rel == nil {
+		e.Rel = []string{}
+	}
+	e.Rel = append(e.Rel, rel)
+	return e
+}
+
+func (e *SirenEmbed[P]) SetRel(rels []string) Embeddable {
+	e.Rel = rels
 	return e
 }
 
@@ -44,7 +65,7 @@ func (e *SirenEmbed[P]) AddClass(class string) Siren[P] {
 	return e
 }
 
-func (e *SirenEmbed[P]) SetProperties(props P) Siren[P] {
+func (e *SirenEmbed[P]) SetProperties(props *P) Siren[P] {
 	e.Properties = props
 	return e
 }
@@ -79,14 +100,14 @@ func (e *SirenEmbed[P]) AddAction(name string, title string, method string,
 	return e
 }
 
-func (e *SirenEmbed[P]) SetEmbeds(embeds []SirenEmbed[any]) Siren[P] {
+func (e *SirenEmbed[P]) SetEmbeds(embeds []Embeddable) Siren[P] {
 	e.Entities = embeds
 	return e
 }
 
 // Rel is an argument because it is required
-func (e *SirenEmbed[P]) AddEmbed(rel []string, embed SirenEmbed[any]) Siren[P] {
-	embed.Rel = rel
+func (e *SirenEmbed[P]) AddEmbed(rel []string, embed Embeddable) Siren[P] {
+	embed.SetRel(rel)
 	e.Entities = append(e.Entities, embed)
 	return e
 }
@@ -95,10 +116,11 @@ func NewSirenEmbed[P any](rel []string) *SirenEmbed[P] {
 	return &SirenEmbed[P]{
 		Rel:      rel,
 		Class:    []string{},
-		Entities: []SirenEmbed[any]{},
+		Entities: []Embeddable{},
 		Actions:  []SirenAction{},
 		Links:    []SirenLink{},
 	}
 }
 
 var _ Siren[any] = (*SirenEmbed[any])(nil)
+var _ Embeddable = (*SirenEmbed[any])(nil)

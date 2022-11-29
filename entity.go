@@ -1,12 +1,12 @@
 package gosiren
 
 type SirenEntity[P any] struct {
-	Title      string            `json:"title,omitempty"`
-	Class      []string          `json:"class,omitempty"`
-	Properties P                 `json:"properties,omitempty"`
-	Entities   []SirenEmbed[any] `json:"entities,omitempty"`
-	Actions    []SirenAction     `json:"actions,omitempty"`
-	Links      []SirenLink       `json:"links,omitempty"`
+	Title      string        `json:"title,omitempty"`
+	Class      []string      `json:"class,omitempty"`
+	Properties *P            `json:"properties,omitempty"`
+	Actions    []SirenAction `json:"actions,omitempty"`
+	Links      []SirenLink   `json:"links,omitempty"`
+	Entities   []Embeddable  `json:"entities,omitempty"`
 }
 
 func (e *SirenEntity[P]) SetTitle(title string) Siren[P] {
@@ -27,7 +27,7 @@ func (e *SirenEntity[P]) AddClass(class string) Siren[P] {
 	return e
 }
 
-func (e *SirenEntity[P]) SetProperties(props P) Siren[P] {
+func (e *SirenEntity[P]) SetProperties(props *P) Siren[P] {
 	e.Properties = props
 	return e
 }
@@ -62,14 +62,14 @@ func (e *SirenEntity[P]) AddAction(name string, title string, method string,
 	return e
 }
 
-func (e *SirenEntity[P]) SetEmbeds(embeds []SirenEmbed[any]) Siren[P] {
+func (e *SirenEntity[P]) SetEmbeds(embeds []Embeddable) Siren[P] {
 	e.Entities = embeds
 	return e
 }
 
 // Rel is an argument because it is required
-func (e *SirenEntity[P]) AddEmbed(rel []string, embed SirenEmbed[any]) Siren[P] {
-	embed.Rel = rel
+func (e *SirenEntity[P]) AddEmbed(rel []string, embed Embeddable) Siren[P] {
+	embed.SetRel(rel)
 	e.Entities = append(e.Entities, embed)
 	return e
 }
@@ -77,7 +77,7 @@ func (e *SirenEntity[P]) AddEmbed(rel []string, embed SirenEmbed[any]) Siren[P] 
 func NewSirenEntity[P any]() *SirenEntity[P] {
 	return &SirenEntity[P]{
 		Class:    []string{},
-		Entities: []SirenEmbed[any]{},
+		Entities: []Embeddable{},
 		Actions:  []SirenAction{},
 		Links:    []SirenLink{},
 	}
