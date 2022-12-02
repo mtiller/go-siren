@@ -1,4 +1,4 @@
-package gosiren
+package siren
 
 type SirenAction struct {
 	Name   string       `json:"name"`

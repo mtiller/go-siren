@@ -1,4 +1,4 @@
-package gosiren
+package siren
 
 import (
 	"encoding/json"

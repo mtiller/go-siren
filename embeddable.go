@@ -1,4 +1,4 @@
-package gosiren
+package siren
 
 type Embeddable interface {
 	GetTitle() string

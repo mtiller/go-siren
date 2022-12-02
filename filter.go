@@ -1,4 +1,4 @@
-package gosiren
+package siren
 
 func Filter[T any](a []T, f func(x T) bool) []T {
 	ret := []T{}

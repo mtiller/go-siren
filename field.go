@@ -1,4 +1,4 @@
-package gosiren
+package siren
 
 type SirenField struct {
 	Name  string      `json:"name"`

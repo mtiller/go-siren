@@ -1,4 +1,4 @@
-package gosiren
+package siren
 
 type SirenLink struct {
 	Rel   []string `json:"rel"`

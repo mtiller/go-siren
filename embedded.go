@@ -1,4 +1,4 @@
-package gosiren
+package siren
 
 type EmbeddedEntity[P any] struct {
 	Rel []string `json:"rel"`
