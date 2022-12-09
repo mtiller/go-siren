@@ -92,10 +92,9 @@ func (e *Siren[P]) GetEntities() []EmbeddedEntity[any] {
 	return e.Entities
 }
 
-func (e *Siren[P]) AddEntity(href string, siren Embeddable, r1 string, rel ...string) *Siren[P] {
+func (e *Siren[P]) AddEntity(siren Embeddable, r1 string, rel ...string) *Siren[P] {
 	embed := EmbeddedEntity[any]{
 		Rel:        append([]string{r1}, rel...),
-		Href:       href,
 		Title:      siren.GetTitle(),
 		Class:      siren.GetClass(),
 		Properties: siren.GetProperties(),
