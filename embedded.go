@@ -100,10 +100,9 @@ func (e *EmbeddedEntity[P]) AddAction(name string, title string, method string,
 	return e
 }
 
-func (e *EmbeddedEntity[P]) AddEntity(href string, siren *Siren[any], rel ...string) *EmbeddedEntity[P] {
+func (e *EmbeddedEntity[P]) AddEntity(siren *Siren[any], rel ...string) *EmbeddedEntity[P] {
 	embed := EmbeddedEntity[any]{
 		Rel:        rel,
-		Href:       href,
 		Title:      siren.Title,
 		Class:      siren.Class,
 		Properties: siren.Properties,
